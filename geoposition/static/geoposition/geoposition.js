@@ -8,7 +8,7 @@ if (jQuery != undefined) {
     $(document).ready(function() {
         var mapDefaults = {
             'mapTypeId': google.maps.MapTypeId.ROADMAP,
-            'scrollwheel': false
+            'scrollwheel': config.SCROLLWHEEL
         };
 
         $('.geoposition-widget').each(function() {
@@ -19,8 +19,8 @@ if (jQuery != undefined) {
                 $searchInput = $('<input>', {'type': 'search', 'placeholder': 'Start typing an address …'}),
                 $latitudeField = $container.find('input.geoposition:eq(0)'),
                 $longitudeField = $container.find('input.geoposition:eq(1)'),
-                latitude = parseFloat($latitudeField.val()) || 0,
-                longitude = parseFloat($longitudeField.val()) || 0,
+                latitude = parseFloat($latitudeField.val()) || config.DEFAULT_LATITUDE,
+                longitude = parseFloat($longitudeField.val()) || config.DEFAULT_LONGITUDE,
                 map,
                 mapLatLng,
                 mapOptions,
@@ -104,7 +104,7 @@ if (jQuery != undefined) {
             mapLatLng = new google.maps.LatLng(latitude, longitude);
             mapOptions = $.extend({}, mapDefaults, {
                 'center': mapLatLng,
-                'zoom': latitude && longitude ? 15 : 1,
+                'zoom': latitude && longitude ? config.DEFAULT_ZOOM : 1,
                 'streetViewControl': false,
                 'panControl': false
             });
@@ -129,7 +129,7 @@ if (jQuery != undefined) {
                 var longitude = parseFloat($longitudeField.val()) || 0;
                 var center = new google.maps.LatLng(latitude, longitude);
                 map.setCenter(center);
-                map.setZoom(15);
+                map.setZoom(config.DEFAULT_ZOOM);
                 marker.setPosition(center);
                 doGeocode();
             });

@@ -1,11 +1,11 @@
 from __future__ import unicode_literals
 
+import json
 from django import forms
 from django.template.loader import render_to_string
 from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 from .conf import settings
-
 
 class GeopositionWidget(forms.MultiWidget):
     def __init__(self, attrs=None):
@@ -23,6 +23,9 @@ class GeopositionWidget(forms.MultiWidget):
         return [None,None]
 
     def format_output(self, rendered_widgets):
+        js_config_dict = [(s.replace('GEOPOSITION_JS_', ''), getattr(settings, s)) 
+                          for s in dir(settings) if s.startswith('GEOPOSITION_JS')]
+        jsconfig = json.dumps(dict(js_config_dict))
         return render_to_string('geoposition/widgets/geoposition.html', {
             'latitude': {
                 'html': rendered_widgets[0],
@@ -34,7 +37,8 @@ class GeopositionWidget(forms.MultiWidget):
             },
             'config': {
                 'map_widget_height': settings.GEOPOSITION_MAP_WIDGET_HEIGHT
-            }
+            },
+            'jsconfig': jsconfig,
         })
 
     class Media:
